@@ -9,8 +9,17 @@ class OwnersController < ApplicationController
   end
 
   def create
-    owner = Owner.create(owner_params)
-    redirect_to owner_path(owner)
+    @owner = Owner.new(owner_params)
+
+    respond_to do |format|
+    if @owner.save
+    format.html { redirect_to owner_path(owner), notice: 'Owner was succesfully created' }
+    format.json { render :show, status: :create, location: @owner}
+    else
+    format.html { render :new }
+    format.json { render json: @owner.errors, status: :unprocessable_entity }
+    end
+    end
   end
 
   def show
